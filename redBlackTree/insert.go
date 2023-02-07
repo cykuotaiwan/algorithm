@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 // assume no duplicate keys
 func (tree *RedBlackTree) Insert(key int, val int) {

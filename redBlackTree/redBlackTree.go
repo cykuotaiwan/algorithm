@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 type color bool
 

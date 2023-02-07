@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (tree *RedBlackTree) transplant(old *TreeNode, new *TreeNode) {
 	if old.Parent == nil { // old is root

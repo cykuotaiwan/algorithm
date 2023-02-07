@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (node *TreeNode) siblingRight() *TreeNode {
 	if node == nil || node.Parent == nil {

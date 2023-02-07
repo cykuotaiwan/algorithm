@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (node *TreeNode) minNode() *TreeNode {
 	curr := node

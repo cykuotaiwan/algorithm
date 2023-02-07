@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (tree *RedBlackTree) search(key int) *TreeNode {
 	node := tree.Root

@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (tree *RedBlackTree) rotateLeft(node *TreeNode) {
 	right := node.Right

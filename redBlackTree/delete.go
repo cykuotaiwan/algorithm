@@ -1,4 +1,4 @@
-package redblacktree
+package redBlackTree
 
 func (tree *RedBlackTree) Delete(key int) {
 	var child *TreeNode
