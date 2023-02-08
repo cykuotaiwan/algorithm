@@ -3,10 +3,10 @@ package redBlackTree
 func (tree *RedBlackTree) Delete(key int) {
 	var child *TreeNode
 	node := tree.search(key)
-	colorOriginal := node.color
 	if node == nil {
 		return
 	}
+	colorOriginal := node.color
 
 	if node.Left == nil {
 		child = node.Right
