@@ -3,7 +3,7 @@ package redBlackTree
 type color bool
 
 const (
-	BLACK, RED color = true, false
+	RED, BLACK color = true, false
 )
 
 type TreeNode struct {

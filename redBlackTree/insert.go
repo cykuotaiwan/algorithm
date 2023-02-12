@@ -1,122 +1,118 @@
 package redBlackTree
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// assume no duplicate keys
 func (tree *RedBlackTree) Insert(key int, val int) {
-	insertNode := &TreeNode{
-		Key:   key,
-		Val:   val,
-		color: RED,
-		Left:  nil,
-		Right: nil,
-	}
+	var node *TreeNode
 
-	var tmp *TreeNode
-	node := tree.Root
-
-	for node != nil {
-		tmp = node
-		if key < tmp.Key {
-			node = node.Left
-		} else {
-			node = node.Right
-		}
-
-		if node == nil {
-			node = tmp
-			break
-		}
-	}
-	fmt.Printf("%p ; %v \t<-- parent\n", node, node)
-	insertNode.Parent = node
-	if tmp == nil { // tree.Root is nil
-		tree.Root = insertNode
-	} else if key < tmp.Key {
-		tmp.Left = insertNode
+	if tree.Root == nil {
+		node = &TreeNode{Key: key, Val: val, color: RED}
+		tree.Root = node
 	} else {
-		tmp.Right = insertNode
+		curr := tree.Root
+		flag := true
+		for flag {
+			if curr.Key == key {
+				curr.Key = key
+				curr.Val = val
+			} else if curr.Key > key {
+				if curr.Left == nil {
+					node = &TreeNode{Key: key, Val: val, color: RED}
+					node.Parent = curr
+					curr.Left = node
+					flag = false
+				} else {
+					curr = curr.Left
+				}
+			} else { // curr.Key > key
+				if curr.Right == nil {
+					node = &TreeNode{Key: key, Val: val, color: RED}
+					node.Parent = curr
+					curr.Right = node
+					flag = false
+				} else {
+					curr = curr.Right
+				}
+			}
+		}
 	}
-	fmt.Printf("%p ; %v \t<-- insert\n", insertNode, insertNode)
 	tree.Visualize("prefix")
-
-	tree.insertFix(insertNode)
-
+	tree.insertCase1(node)
+	fmt.Println()
 	tree.Visualize("postfix")
-	fmt.Printf("%p ; %v \t<-- parent fixed\n\n", node, node)
 }
 
-func (tree *RedBlackTree) insertFix(node *TreeNode) {
-	if node.Parent == nil { // node is tree.Root
+// Reference: https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+
+func (tree *RedBlackTree) insertCase1(node *TreeNode) {
+	node.print("case1 node")
+	if node.Parent == nil { // node is root
 		node.color = BLACK
+		tree.Visualize("case1")
+	} else {
+		tree.insertCase2(node)
+	}
+}
+
+func (tree *RedBlackTree) insertCase2(node *TreeNode) {
+	node.print("case2 node")
+	if getColor(node) == BLACK {
+		tree.Visualize("case2")
+		return
+	} else {
+		tree.insertCase3(node)
+	}
+}
+
+func (tree *RedBlackTree) insertCase3(node *TreeNode) {
+	node.print("case3 node")
+	uncle := node.uncle()
+	uncle.print("\tuncle")
+	tree.Visualize("precase3")
+
+	if getColor(uncle) == RED {
+		node.Parent.color = BLACK
+		uncle.color = BLACK
+		node.grandparent().color = RED
+		tree.insertCase1(node.grandparent())
+		tree.Visualize("case3")
+	} else {
+		tree.insertCase4(node)
+	}
+}
+
+func (tree *RedBlackTree) insertCase4(node *TreeNode) {
+	node.print("case4 node")
+	grandparent := node.grandparent()
+	grandparent.print("\tgrandparent")
+
+	if grandparent == nil {
 		return
 	}
 
-	if node.color == BLACK {
-		return
+	if node == node.Parent.Right && node.Parent == grandparent.Left {
+		tree.rotateLeft(node.Parent)
+		node = node.Left
+	} else if node == node.Parent.Left && node.Parent == grandparent.Right {
+		tree.rotateRight(node.Parent)
+		node = node.Right
 	}
+	tree.Visualize("case4")
 
-	fmt.Printf("%p ; %v \t<-- fix before\n", node, node)
+	tree.insertCase5(node)
+}
 
-	for node.Parent.color == RED {
-		if node.Parent == node.grandparent().Left {
-			uncle := node.uncleRight()
-			if uncle.color == RED {
-				// case 1
-				//     node's uncle is red
-				fmt.Println("[Case Left 1]")
+func (tree *RedBlackTree) insertCase5(node *TreeNode) {
+	node.print("case5 node")
+	node.Parent.color = BLACK
+	grandparent := node.grandparent()
+	grandparent.print("\tgrandparent")
+	grandparent.color = RED
 
-				node.Parent.color = BLACK
-				uncle.color = BLACK
-
-				node.grandparent().color = RED
-				node = node.grandparent()
-				fmt.Printf("%p ; %v \t<-- fix after case 1\n", node, node)
-			} else if node == node.Parent.Right {
-				// case 2
-				//     node's uncle is black and node is a right child
-				fmt.Println("[Case Left 2]")
-
-				node = node.Parent
-				tree.rotateLeft(node)
-			}
-			// case 3
-			//     node's uncle is black and node is a left child
-			fmt.Println("[Case Left 3]")
-			node.Parent.color = BLACK
-			node.grandparent().color = RED
-			tree.rotateRight(node.grandparent())
-		} else {
-			if node.Parent == node.grandparent().Right {
-				uncle := node.uncleLeft()
-				if uncle.color == RED {
-					// case 1
-					//     node's uncle is red
-					fmt.Println("[Case Right 1]")
-					node.Parent.color = BLACK
-					uncle.color = BLACK
-
-					node.grandparent().color = RED
-					node = node.grandparent()
-				}
-			} else if node == node.Parent.Left {
-				// case 2
-				//     node's uncle is black and node is a right child
-				fmt.Println("[Case Right 2]")
-				node = node.Parent
-				tree.rotateRight(node)
-			}
-			// case 3
-			//     node's uncle is black and node is a left child
-			fmt.Println("[Case Right 3]")
-			node.Parent.color = BLACK
-			node.grandparent().color = RED
-			tree.rotateLeft(node.grandparent())
-		}
+	if node == node.Parent.Left && node.Parent == grandparent.Left {
+		tree.rotateRight(grandparent)
+	} else if node == node.Parent.Right && node.Parent == grandparent.Right {
+		tree.rotateLeft(grandparent)
 	}
-	fmt.Printf("%p ; %v \t<-- fix after\n", node, node)
-
-	tree.Root.color = BLACK
+	tree.Visualize("case5")
 }
