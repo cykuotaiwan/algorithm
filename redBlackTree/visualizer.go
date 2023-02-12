@@ -8,6 +8,9 @@ import (
 	"strconv"
 )
 
+// use graphviz
+// sudo apt install graphviz
+
 func (tree *RedBlackTree) Visualize(imgName string) {
 	formatStr := "digraph rbt{\n" + createRBTString(tree.Root) + "}\n"
 
@@ -60,7 +63,7 @@ func createRBTString(node *TreeNode) string {
 		currentNodeStr += strconv.Itoa(node.Right.Key)
 		currentNodeStr += ";\n"
 	}
-	if GetColor(node) == BLACK {
+	if getColor(node) == BLACK {
 		currentNodeStr += strconv.Itoa(node.Key)
 		currentNodeStr += "[style = \"filled\" fillcolor = \"black\" fontcolor=\"white\"];\n"
 	} else {
