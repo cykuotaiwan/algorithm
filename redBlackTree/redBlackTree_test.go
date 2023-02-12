@@ -5,12 +5,16 @@ import (
 	"testing"
 )
 
-func TestRedBlackTree(t *testing.T) {
+func TestRedBlackTreeInsert(t *testing.T) {
 	var tree rbt.RedBlackTree
-	tree.Insert(9, 9)
-	tree.Insert(8, 8)
-	tree.Insert(16, 16)
+	tree.Insert(12, 12)
 	tree.Insert(7, 7)
+	tree.Insert(16, 16)
+	tree.Insert(4, 4)
+	tree.Insert(6, 6)
+	tree.Insert(8, 8)
+	tree.Insert(9, 9)
+	tree.Insert(10, 10)
 
-	tree.Visualize("testMain")
+	tree.Visualize("testInsert")
 }
