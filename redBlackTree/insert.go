@@ -1,7 +1,5 @@
 package redBlackTree
 
-import "fmt"
-
 func (tree *RedBlackTree) Insert(key int, val int) {
 	var node *TreeNode
 
@@ -36,28 +34,21 @@ func (tree *RedBlackTree) Insert(key int, val int) {
 			}
 		}
 	}
-	tree.Visualize("prefix")
 	tree.insertCase1(node)
-	fmt.Println()
-	tree.Visualize("postfix")
 }
 
 // Reference: https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 
 func (tree *RedBlackTree) insertCase1(node *TreeNode) {
-	node.print("case1 node")
 	if node.Parent == nil { // node is root
 		node.color = BLACK
-		tree.Visualize("case1")
 	} else {
 		tree.insertCase2(node)
 	}
 }
 
 func (tree *RedBlackTree) insertCase2(node *TreeNode) {
-	node.print("case2 node")
-	if getColor(node) == BLACK {
-		tree.Visualize("case2")
+	if getColor(node) == BLACK { // node is black or nil
 		return
 	} else {
 		tree.insertCase3(node)
@@ -65,27 +56,21 @@ func (tree *RedBlackTree) insertCase2(node *TreeNode) {
 }
 
 func (tree *RedBlackTree) insertCase3(node *TreeNode) {
-	node.print("case3 node")
 	uncle := node.uncle()
-	uncle.print("\tuncle")
-	tree.Visualize("precase3")
 
 	if getColor(uncle) == RED {
+		// if uncle is red, and probably parent is red too
 		node.Parent.color = BLACK
 		uncle.color = BLACK
 		node.grandparent().color = RED
 		tree.insertCase1(node.grandparent())
-		tree.Visualize("case3")
 	} else {
 		tree.insertCase4(node)
 	}
 }
 
 func (tree *RedBlackTree) insertCase4(node *TreeNode) {
-	node.print("case4 node")
 	grandparent := node.grandparent()
-	grandparent.print("\tgrandparent")
-
 	if grandparent == nil {
 		return
 	}
@@ -97,16 +82,13 @@ func (tree *RedBlackTree) insertCase4(node *TreeNode) {
 		tree.rotateRight(node.Parent)
 		node = node.Right
 	}
-	tree.Visualize("case4")
 
 	tree.insertCase5(node)
 }
 
 func (tree *RedBlackTree) insertCase5(node *TreeNode) {
-	node.print("case5 node")
 	node.Parent.color = BLACK
 	grandparent := node.grandparent()
-	grandparent.print("\tgrandparent")
 	grandparent.color = RED
 
 	if node == node.Parent.Left && node.Parent == grandparent.Left {
@@ -114,5 +96,4 @@ func (tree *RedBlackTree) insertCase5(node *TreeNode) {
 	} else if node == node.Parent.Right && node.Parent == grandparent.Right {
 		tree.rotateLeft(grandparent)
 	}
-	tree.Visualize("case5")
 }
