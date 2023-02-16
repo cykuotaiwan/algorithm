@@ -33,7 +33,97 @@ func (tree *RedBlackTree) Delete(key int) {
 	}
 
 	if colorOriginal == BLACK {
-		tree.deleteFix(child)
+		tree.deleteCase1(child)
+	}
+}
+
+func (tree *RedBlackTree) deleteCase1(node *TreeNode) {
+	if node.Parent == nil {
+		return
+	}
+	tree.deleteCase2(node)
+}
+
+func (tree *RedBlackTree) deleteCase2(node *TreeNode) {
+	sibling := node.sibling()
+
+	if getColor(sibling) == RED {
+		node.Parent.color = RED
+		sibling.color = BLACK
+		if node == node.sibling() {
+			tree.rotateLeft(node.Parent)
+		} else {
+			tree.rotateRight(node.Parent)
+		}
+	}
+
+	tree.deleteCase3(node)
+}
+
+func (tree *RedBlackTree) deleteCase3(node *TreeNode) {
+	sibling := node.sibling()
+
+	if getColor(node.Parent) == BLACK &&
+		getColor(sibling) == BLACK &&
+		getColor(sibling.Left) == BLACK &&
+		getColor(sibling.Right) == BLACK {
+		sibling.color = RED
+		tree.deleteCase1(node.Parent)
+
+	} else {
+		tree.deleteCase4(node)
+	}
+}
+
+func (tree *RedBlackTree) deleteCase4(node *TreeNode) {
+	sibling := node.sibling()
+
+	if getColor(node.Parent) == RED &&
+		getColor(sibling) == BLACK &&
+		getColor(sibling.Left) == BLACK &&
+		getColor(sibling.Right) == BLACK {
+		sibling.color = RED
+		node.Parent.color = BLACK
+
+	} else {
+		tree.deleteCase5(node)
+	}
+}
+
+func (tree *RedBlackTree) deleteCase5(node *TreeNode) {
+	sibling := node.sibling()
+
+	if node == node.Parent.Left &&
+		getColor(sibling) == BLACK &&
+		getColor(sibling.Left) == RED &&
+		getColor(sibling.Right) == BLACK {
+		sibling.color = RED
+		sibling.Left.color = BLACK
+		tree.rotateRight(sibling)
+	} else if node == node.Parent.Right &&
+		getColor(sibling) == BLACK &&
+		getColor(sibling.Right) == RED &&
+		getColor(sibling.Left) == BLACK {
+		sibling.color = RED
+		sibling.Right.color = BLACK
+		tree.rotateLeft(sibling)
+	}
+
+	tree.deleteCase6(node)
+}
+
+func (tree *RedBlackTree) deleteCase6(node *TreeNode) {
+	sibling := node.sibling()
+
+	sibling.color = getColor(node.Parent)
+	node.Parent.color = BLACK
+
+	if node == node.siblingLeft() && getColor(sibling.Right) == RED {
+		sibling.Right.color = BLACK
+		tree.rotateLeft(node.Parent)
+	} else if getColor(sibling.Left) == RED {
+		sibling.Left.color = BLACK
+		tree.rotateRight(node.Parent)
 	}
 }
 
