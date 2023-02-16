@@ -5,7 +5,7 @@ func (tree *RedBlackTree) search(key int) *TreeNode {
 	for node != nil {
 		if node.Key == key {
 			return node
-		} else if node.Key < key {
+		} else if node.Key > key {
 			node = node.Left
 		} else {
 			node = node.Right
