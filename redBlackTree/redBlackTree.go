@@ -15,8 +15,18 @@ type TreeNode struct {
 	Right  *TreeNode
 }
 
+func NewRBTNode(key int, val int) *TreeNode {
+	node := &TreeNode{Key: key, Val: val, color: RED}
+	return node
+}
+
 type RedBlackTree struct {
 	Root *TreeNode
+}
+
+func NewRBTree() *RedBlackTree {
+	tree := &RedBlackTree{}
+	return tree
 }
 
 /*

@@ -4,7 +4,7 @@ func (tree *RedBlackTree) Insert(key int, val int) {
 	var node *TreeNode
 
 	if tree.Root == nil {
-		node = &TreeNode{Key: key, Val: val, color: RED}
+		node = NewRBTNode(key, val)
 		tree.Root = node
 	} else {
 		curr := tree.Root
@@ -15,7 +15,7 @@ func (tree *RedBlackTree) Insert(key int, val int) {
 				curr.Val = val
 			} else if curr.Key > key {
 				if curr.Left == nil {
-					node = &TreeNode{Key: key, Val: val, color: RED}
+					node = NewRBTNode(key, val)
 					node.Parent = curr
 					curr.Left = node
 					flag = false
@@ -24,7 +24,7 @@ func (tree *RedBlackTree) Insert(key int, val int) {
 				}
 			} else { // curr.Key > key
 				if curr.Right == nil {
-					node = &TreeNode{Key: key, Val: val, color: RED}
+					node = NewRBTNode(key, val)
 					node.Parent = curr
 					curr.Right = node
 					flag = false

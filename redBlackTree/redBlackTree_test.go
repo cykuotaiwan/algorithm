@@ -6,7 +6,7 @@ import (
 )
 
 func TestRedBlackTreeInsert(t *testing.T) {
-	var tree rbt.RedBlackTree
+	tree := rbt.NewRBTree()
 	tree.Insert(12, 12)
 	tree.Insert(7, 7)
 	tree.Insert(16, 16)
@@ -21,7 +21,7 @@ func TestRedBlackTreeInsert(t *testing.T) {
 
 func TestRedBlackTreeDelete(t *testing.T) {
 	// generate rbt
-	var tree *rbt.RedBlackTree
+	tree := rbt.NewRBTree()
 
 	tree.Insert(12, 12)
 	tree.Insert(7, 7)
